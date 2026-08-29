@@ -14,7 +14,7 @@ using Soenneker.Utils.AsyncSingleton;
 
 namespace Soenneker.OpenHands.OpenApiClientUtil;
 
-///<inheritdoc cref="IOpenHandsOpenApiClientUtil"/>
+/// <inheritdoc cref="IOpenHandsOpenApiClientUtil"/>
 public sealed class OpenHandsOpenApiClientUtil : IOpenHandsOpenApiClientUtil
 {
     private readonly AsyncSingleton<OpenHandsOpenApiClient> _client;
