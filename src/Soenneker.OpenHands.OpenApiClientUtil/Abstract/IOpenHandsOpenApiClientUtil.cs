@@ -11,9 +11,9 @@ namespace Soenneker.OpenHands.OpenApiClientUtil.Abstract;
 public interface IOpenHandsOpenApiClientUtil: IDisposable, IAsyncDisposable
 {
     /// <summary>
-    /// Gets the value.
+    /// Returns the configured open Hands OpenAPI Client used by the Open Hands OpenAPI Client.
     /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task containing the result of the operation.</returns>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task whose result is the requested open Hands OpenAPI Client.</returns>
     ValueTask<OpenHandsOpenApiClient> Get(CancellationToken cancellationToken = default);
 }
