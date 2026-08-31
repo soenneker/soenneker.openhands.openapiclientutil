@@ -1,10 +1,11 @@
 [![](https://img.shields.io/nuget/v/soenneker.openhands.openapiclientutil.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.openhands.openapiclientutil/)
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.openhands.openapiclientutil/publish-package.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.openhands.openapiclientutil/actions/workflows/publish-package.yml)
 [![](https://img.shields.io/nuget/dt/soenneker.openhands.openapiclientutil.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.openhands.openapiclientutil/)
+[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.openhands.openapiclientutil/codeql.yml?style=for-the-badge&label=codeql)](https://github.com/soenneker/soenneker.openhands.openapiclientutil/actions/workflows/codeql.yml)
 
 # Soenneker.OpenHands.OpenApiClientUtil
 
-Exposes a cached OpenAPI client instance.
+Provides a configured OpenHands Cloud API client and reuses it for the lifetime of the registered service.
 
 ## Install
 
@@ -12,31 +13,32 @@ Exposes a cached OpenAPI client instance.
 dotnet add package Soenneker.OpenHands.OpenApiClientUtil
 ```
 
-## Quick start
+## Configuration
 
-```csharp
-using Soenneker.OpenHands.OpenApiClientUtil.Registrars;
-using Microsoft.Extensions.DependencyInjection;
-
-var services = new ServiceCollection();
-var result = services.AddOpenHandsOpenApiClientUtilAsSingleton();
+```json
+{
+  "OpenHands": {
+    "ApiKey": "your-api-key"
+  }
+}
 ```
 
-Adds `OpenHandsOpenApiClientUtil` as a singleton service.
+## Usage
 
-## What you get
+```csharp
+using Soenneker.OpenHands.OpenApiClientUtil.Abstract;
+using Soenneker.OpenHands.OpenApiClientUtil.Registrars;
 
-- `IOpenHandsOpenApiClientUtil` — Exposes a cached OpenAPI client instance.
-- `OpenHandsOpenApiClientUtilRegistrar` — Registers the OpenAPI client utility for dependency injection.
+services.AddOpenHandsOpenApiClientUtilAsSingleton();
 
-## API at a glance
+IOpenHandsOpenApiClientUtil openHands = serviceProvider
+    .GetRequiredService<IOpenHandsOpenApiClientUtil>();
 
-| API | What it does | Result / important behavior |
-| --- | --- | --- |
-| `OpenHandsOpenApiClientUtilRegistrar.AddOpenHandsOpenApiClientUtilAsSingleton(services)` | Adds `OpenHandsOpenApiClientUtil` as a singleton service. | The same service collection, so additional registrations can be chained. |
-| `OpenHandsOpenApiClientUtilRegistrar.AddOpenHandsOpenApiClientUtilAsScoped(services)` | Adds `OpenHandsOpenApiClientUtil` as a scoped service. | The same service collection, so additional registrations can be chained. |
+var client = await openHands.Get(cancellationToken);
+var conversations = await client.Api.V1.AppConversations.Search.GetAsync(request =>
+{
+    request.QueryParameters.Limit = 20;
+}, cancellationToken);
+```
 
-## Practical notes
-
-- Reuse the registered client instead of constructing one per operation.
-- Dispose instances you own when their scope ends so held resources can be released.
+Use `AddOpenHandsOpenApiClientUtilAsScoped()` when each application scope should have its own generated client wrapper. The underlying authenticated HTTP provider remains shared and is disposed by the service container at shutdown.

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 namespace Soenneker.OpenHands.OpenApiClientUtil.Abstract;
 
 /// <summary>
-/// Exposes a cached OpenAPI client instance.
+/// Provides a cached OpenHands Cloud API client backed by the configured HTTP provider.
 /// </summary>
-public interface IOpenHandsOpenApiClientUtil: IDisposable, IAsyncDisposable
+public interface IOpenHandsOpenApiClientUtil : IDisposable, IAsyncDisposable
 {
     /// <summary>
-    /// Returns the configured open Hands OpenAPI Client used by the Open Hands OpenAPI Client.
+    /// Gets the cached OpenHands client, creating it on the first call.
     /// </summary>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
-    /// <returns>A task whose result is the requested open Hands OpenAPI Client.</returns>
+    /// <returns>The configured OpenHands client.</returns>
     ValueTask<OpenHandsOpenApiClient> Get(CancellationToken cancellationToken = default);
 }
