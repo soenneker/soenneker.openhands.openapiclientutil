@@ -46,7 +46,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.OpenHands.HttpClients" Version="11.0.156" />
+        <PackageReference Include="Soenneker.OpenHands.HttpClients" Version="11.0.157" />
         <PackageReference Include="Soenneker.OpenHands.OpenApiClient" Version="11.0.61" />
     </ItemGroup>
 </Project>
